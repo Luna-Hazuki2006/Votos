@@ -9,6 +9,25 @@
 </head>
 <body>
     <h1>Votación</h1>
+    <nav>
+        <ul>
+            <li>
+                <a href="{{ url_for('listar_categorias') }}">Sección de categorías</a>
+            </li>
+            <li>
+                <a href="{{ url_for('listar_examenes') }}">Sección de exámenes</a>
+            </li>
+            <li>
+                <a href="{{ url_for('listar_indicaciones') }}">Sección de indicaciones</a>
+            </li>
+            <li>
+                <a href="{{ url_for('listar_tipos') }}">Sección de tipos</a>
+            </li>
+            <li>
+                <a href="{{ url_for('reportes') }}">Revisar reportes</a>
+            </li>
+        </ul>
+    </nav>
     <form>
         <label for="nombre">Nombre: </label>
         <input type="text" name="nombre" id="nombre"><br>
