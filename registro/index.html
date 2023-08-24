@@ -8,35 +8,36 @@
     <script src="../index.js" defer></script>
     <title>Votación</title>
 </head>
-<body onload="revisar();">
+<body>
     <header>
         <a href="../index.html">
             <h1>Votación</h1>
         </a>
         <div>
-            <a href="../../usuario/index.html">
+            <a href="../registro/index.html">
                 <button>Registrar votante</button>
             </a>
-            <a href="../../usuario/index.html">
+            <a href="../inicio/index.html">
                 <button>Iniciar sesión</button>
             </a>
         </div>
+        <p id="usuario">Usuario: ninguno</p>
     </header>
     <nav>
         <ul>
             <li>
-                <a href="../../votantes/index.html">Votantes</a>
+                <a href="../votantes/index.html">Votantes</a>
             </li>
             <li>
-                <a href="../../candidatos/index.html">Candidatos</a>
+                <a href="../candidatos/index.html">Candidatos</a>
             </li>
             <li>
-                <a href="../../resultados/index.html">Resultados</a>
+                <a href="../resultados/index.html">Resultados</a>
             </li>
         </ul>
     </nav>
     <form>
-        <h2 id="titulo">Usuario</h2>
+        <h2 id="titulo">Registro de usuario</h2>
         <label for="cedula">Cédula: </label>
         <input type="text" name="cedula" id="cedula"><br>
         <label for="nombre">Nombre: </label>
@@ -47,7 +48,7 @@
         <input type="password" name="repetida" id="repetida"><br>
         <label for="correo">Correo electrónico: </label>
         <input type="email" name="correo" id="correo"><br>
-        <button type="button">Mandar correo</button>
+        <button type="button" onclick="registrar_usuario();">Mandar correo</button>
     </form>
 </body>
 </html>
