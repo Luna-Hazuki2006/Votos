@@ -36,6 +36,9 @@
             </li>
         </ul>
     </nav>
+    {% for mensaje in get_flashed_messages() %}
+    <p style="color: red;">{{ mensaje }}</p>
+    {% endfor %}
     {% block content %}
     {% endblock %}
 </body>

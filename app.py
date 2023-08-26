@@ -1,5 +1,6 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request, flash
 from db import candidatos, votantes
+from pprint import pprint
 # korean queen tokyo walmart 2 DRIP > TOKYO , rope SKYPE _ 4 & korean XBOX
 app = Flask(__name__, template_folder='templates')
 app.config['SECRET_KEY'] = 'kqtw2D>T,rS_4&kX'
@@ -12,8 +13,19 @@ def iniciar():
 def listar_candidatos(): 
     return render_template('/candidatos/index.html')
 
-@app.route('/registro', methods=['GET'])
+@app.route('/registro', methods=['GET', 'POST'])
 def registrar_usuario(): 
+    if request.method == 'POST':
+        forma = request.form
+        nuevo_votante = {
+            'cedula': forma['cedula'], 
+            'nombre': forma['nombre'], 
+            'apellido': forma['apellido'], 
+            'clave': forma['contraseña'], 
+            'correo': forma['correo']
+        }
+        pprint(nuevo_votante)
+        flash(nuevo_votante)
     return render_template('/registro/index.html')
 
 @app.route('/inicio', methods=['GET'])

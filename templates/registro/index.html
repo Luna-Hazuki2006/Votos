@@ -1,17 +1,19 @@
 {% extends './index.html' %}
 {% block content %}
-<form>
+<form method="post">
     <h2 id="titulo">Registro de usuario</h2>
     <label for="cedula">Cédula: </label>
-    <input type="text" name="cedula" id="cedula"><br>
-    <label for="nombre">Nombre: </label>
-    <input type="text" name="nombre" id="nombre"><br>
+    <input type="text" name="cedula" id="cedula" required><br>
+    <label for="nombre">Nombres: </label>
+    <input type="text" name="nombre" id="nombre" required><br>
+    <label for="apellido">Apellidos: </label>
+    <input type="text" name="apellido" id="apellido" required><br>
     <label for="contraseña">Contraseña: </label>
-    <input type="password" name="contraseña" id="contraseña"><br>
+    <input type="password" name="contraseña" id="contraseña" required><br>
     <label for="repetida">Contraseña (de nuevo): </label>
-    <input type="password" name="repetida" id="repetida"><br>
+    <input type="password" name="repetida" id="repetida" required><br>
     <label for="correo">Correo electrónico: </label>
-    <input type="email" name="correo" id="correo"><br>
-    <button type="button" onclick="registrar_usuario();">Mandar correo</button>
+    <input type="email" name="correo" id="correo" required><br>
+    <button type="submit" onclick="registrar_usuario();">Mandar correo</button>
 </form>
 {% endblock %}
