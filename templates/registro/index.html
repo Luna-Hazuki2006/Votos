@@ -1,54 +1,17 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/dark.min.css">
-    <link rel="stylesheet" href="../style.css">
-    <script src="../index.js" defer></script>
-    <title>Votación</title>
-</head>
-<body>
-    <header>
-        <a href="../index.html">
-            <h1>Votación</h1>
-        </a>
-        <div>
-            <a href="../registro/index.html">
-                <button>Registrar votante</button>
-            </a>
-            <a href="../inicio/index.html">
-                <button>Iniciar sesión</button>
-            </a>
-        </div>
-        <p id="usuario">Usuario: ninguno</p>
-    </header>
-    <nav>
-        <ul>
-            <li>
-                <a href="../votantes/index.html">Votantes</a>
-            </li>
-            <li>
-                <a href="../candidatos/index.html">Candidatos</a>
-            </li>
-            <li>
-                <a href="../resultados/index.html">Resultados</a>
-            </li>
-        </ul>
-    </nav>
-    <form>
-        <h2 id="titulo">Registro de usuario</h2>
-        <label for="cedula">Cédula: </label>
-        <input type="text" name="cedula" id="cedula"><br>
-        <label for="nombre">Nombre: </label>
-        <input type="text" name="nombre" id="nombre"><br>
-        <label for="contraseña">Contraseña: </label>
-        <input type="password" name="contraseña" id="contraseña"><br>
-        <label for="repetida">Contraseña (de nuevo): </label>
-        <input type="password" name="repetida" id="repetida"><br>
-        <label for="correo">Correo electrónico: </label>
-        <input type="email" name="correo" id="correo"><br>
-        <button type="button" onclick="registrar_usuario();">Mandar correo</button>
-    </form>
-</body>
-</html>
+{% extends './index.html' %}
+{% block content %}
+<form>
+    <h2 id="titulo">Registro de usuario</h2>
+    <label for="cedula">Cédula: </label>
+    <input type="text" name="cedula" id="cedula"><br>
+    <label for="nombre">Nombre: </label>
+    <input type="text" name="nombre" id="nombre"><br>
+    <label for="contraseña">Contraseña: </label>
+    <input type="password" name="contraseña" id="contraseña"><br>
+    <label for="repetida">Contraseña (de nuevo): </label>
+    <input type="password" name="repetida" id="repetida"><br>
+    <label for="correo">Correo electrónico: </label>
+    <input type="email" name="correo" id="correo"><br>
+    <button type="button" onclick="registrar_usuario();">Mandar correo</button>
+</form>
+{% endblock %}
