@@ -20,5 +20,13 @@ def registrar_usuario():
 def iniciar_sesion():
     return render_template('/inicio/index.html')
 
+@app.route('/resultados', methods=['GET'])
+def mostrar_resultados(): 
+    return render_template('/resultados/index.html')
+
+@app.route('/votantes', methods=['GET'])
+def listar_votantes():
+    return render_template('/votantes/index.html')
+
 if __name__ == '__main__':
     app.run(debug=True)
