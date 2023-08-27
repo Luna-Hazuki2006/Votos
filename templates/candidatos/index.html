@@ -5,21 +5,11 @@
         <th>Cédula</th>
         <th>Nombre</th>
     </tr>
+    {% for esto in lista %}
     <tr>
-        <td>123</td>
-        <td>Presidente 1</td>
+        <td>{{ esto['cedula'] }}</td>
+        <td>{{ esto['nombre'] }}</td>
     </tr>
-    <tr>
-        <td>234</td>
-        <td>Presidente 2</td>
-    </tr>
-    <tr>
-        <td>345</td>
-        <td>Presidente 3</td>
-    </tr>
-    <tr>
-        <td>456</td>
-        <td>Presidente 4</td>
-    </tr>
+    {% endfor %}
 </table>
 {% endblock %}

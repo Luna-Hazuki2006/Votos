@@ -12,7 +12,8 @@ def iniciar():
 
 @app.route('/candidatos', methods=['GET'])
 def listar_candidatos(): 
-    return render_template('/candidatos/index.html')
+    lista = candidatos.find({'estatus': 'A'})
+    return render_template('/candidatos/index.html', lista=lista)
 
 @app.route('/registro', methods=['GET', 'POST'])
 def registrar_usuario(): 
