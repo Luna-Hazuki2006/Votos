@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, flash
 from db import candidatos, votantes
+from validaciones import agregar_votante, agregar_candidato
 from pprint import pprint
 # korean queen tokyo walmart 2 DRIP > TOKYO , rope SKYPE _ 4 & korean XBOX
 app = Flask(__name__, template_folder='templates')
@@ -26,7 +27,13 @@ def registrar_usuario():
             'estatus': 'A'
         }
         pprint(nuevo_votante)
-        flash(nuevo_votante)
+        if agregar_votante(nuevo_votante): 
+            id = votantes.insert_one(nuevo_votante).inserted_id
+            if id: 
+                flash('Se ha registrado como votante éxitosamente')
+                forma.clear()
+            else: 
+                flash('Ha sucedido un error al registrarse')
     return render_template('/registro/index.html')
 
 @app.route('/inicio', methods=['GET'])
