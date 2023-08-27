@@ -29,3 +29,7 @@ nav li a:hover {
 form, table {
     margin-top: 20px;
 }
+
+input {
+    width: 100%;
+}
