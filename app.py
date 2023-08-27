@@ -22,7 +22,8 @@ def registrar_usuario():
             'nombre': forma['nombre'], 
             'apellido': forma['apellido'], 
             'clave': forma['contraseña'], 
-            'correo': forma['correo']
+            'correo': forma['correo'], 
+            'estatus': 'A'
         }
         pprint(nuevo_votante)
         flash(nuevo_votante)
