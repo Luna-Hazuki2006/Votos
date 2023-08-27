@@ -4,27 +4,14 @@
     <tr>
         <th>Cédula</th>
         <th>Nombre</th>
-        <th>Votado</th>
+        <th>Apellido</th>
     </tr>
+    {% for este in lista %}
     <tr>
-        <td>111</td>
-        <td>Ana Paula</td>
-        <td>Presidente 1</td>
+        <td>{{ este['cedula'] }}</td>
+        <td>{{ este['nombre'] }}</td>
+        <td>{{ este['apellido'] }}</td>
     </tr>
-    <tr>
-        <td>222</td>
-        <td>Luna Hazuki</td>
-        <td>Presidente 2</td>
-    </tr>
-    <tr>
-        <td>333</td>
-        <td>Ana Mercedes</td>
-        <td>Presidente 3</td>
-    </tr>
-    <tr>
-        <td>444</td>
-        <td>Maria Moolit</td>
-        <td>Presidente 3</td>
-    </tr>
+    {% endfor %}
 </table>
 {% endblock %}

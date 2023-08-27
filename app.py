@@ -31,12 +31,10 @@ def registrar_usuario():
             id = votantes.insert_one(nuevo_votante).inserted_id
             if id: 
                 flash('Se ha registrado como votante éxitosamente')
-                forma.clear()
             else: 
                 flash('Ha sucedido un error al registrarse')
         else: 
             flash('La cédula que ha registrado ya existe')
-            forma.clear()
     return render_template('/registro/index.html')
 
 @app.route('/inicio', methods=['GET'])
@@ -48,8 +46,9 @@ def mostrar_resultados():
     return render_template('/resultados/index.html')
 
 @app.route('/votantes', methods=['GET'])
-def listar_votantes():
-    return render_template('/votantes/index.html')
+def listar_votantes(): 
+    lista = votantes.find({'estatus': 'A'})
+    return render_template('/votantes/index.html', lista=lista)
 
 if __name__ == '__main__':
     app.run(debug=True)
