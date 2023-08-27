@@ -34,6 +34,8 @@ def registrar_usuario():
                 forma.clear()
             else: 
                 flash('Ha sucedido un error al registrarse')
+        else: 
+            flash('La cédula que ha registrado ya existe')
     return render_template('/registro/index.html')
 
 @app.route('/inicio', methods=['GET'])
