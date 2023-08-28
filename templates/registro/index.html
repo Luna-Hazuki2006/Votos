@@ -14,6 +14,12 @@
     <input type="password" name="repetida" id="repetida" required><br>
     <label for="correo">Correo electrónico: </label>
     <input type="email" name="correo" id="correo" required><br>
+    <label for="tipo">Tipo de usuario: </label>
+    <select name="tipo" id="tipo" value="{{ tipo }}">
+        {% for esto in ['votante', 'candidato'] %}
+        <option value="{{ esto }}">{{ esto }}</option>
+        {% endfor %}
+    </select><br>
     <button type="submit" onclick="registrar_usuario();">Mandar correo</button>
 </form>
 {% endblock %}

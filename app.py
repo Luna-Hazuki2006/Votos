@@ -19,7 +19,7 @@ def listar_candidatos():
 def registrar_usuario(): 
     if request.method == 'POST':
         forma = request.form
-        nuevo_votante = {
+        nuevo_usuario = {
             'cedula': forma['cedula'], 
             'nombre': forma['nombre'], 
             'apellido': forma['apellido'], 
@@ -27,15 +27,26 @@ def registrar_usuario():
             'correo': forma['correo'], 
             'estatus': 'A'
         }
-        pprint(nuevo_votante)
-        if agregar_votante(nuevo_votante): 
-            id = votantes.insert_one(nuevo_votante).inserted_id
-            if id: 
-                flash('Se ha registrado como votante éxitosamente')
+        if forma['tipo'] == 'votante': 
+            if agregar_votante(nuevo_usuario): 
+                id = votantes.insert_one(nuevo_usuario).inserted_id
+                if id: 
+                    flash('Se ha registrado como votante éxitosamente')
+                else: 
+                    flash('Ha sucedido un error al registrarse')
             else: 
-                flash('Ha sucedido un error al registrarse')
-        else: 
-            flash('La cédula que ha registrado ya existe')
+                flash('La cédula que ha registrado ya existe')
+        elif forma['tipo'] == 'candidato': 
+            if agregar_candidato(nuevo_usuario): 
+                id = candidatos.insert_one(nuevo_usuario).inserted_id
+                if id: 
+                    flash('Se ha registrado como candidato éxitosamente')
+                else: 
+                    flash('Ha sucedido un error al registrarse')
+            else: 
+                flash('La cédula que ha registrado ya existe')
+        pprint(nuevo_usuario)
+        pprint(forma['tipo'])
     return render_template('/registro/index.html')
 
 @app.route('/inicio', methods=['GET'])
