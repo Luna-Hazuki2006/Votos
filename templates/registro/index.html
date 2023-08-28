@@ -15,7 +15,7 @@
     <label for="correo">Correo electrónico: </label>
     <input type="email" name="correo" id="correo" required><br>
     <label for="tipo">Tipo de usuario: </label>
-    <select name="tipo" id="tipo" value="{{ tipo }}">
+    <select name="tipo" id="tipo">
         {% for esto in ['votante', 'candidato'] %}
         <option value="{{ esto }}">{{ esto }}</option>
         {% endfor %}
