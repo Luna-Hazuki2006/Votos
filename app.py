@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, flash
 from flask_login import LoginManager
+from itsdangerous import URLSafeTimedSerializer
 from werkzeug.security import generate_password_hash
 from db import candidatos, votantes
 from validaciones import agregar_votante, agregar_candidato, verificar_usuario
