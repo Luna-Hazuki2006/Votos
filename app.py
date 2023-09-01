@@ -1,8 +1,8 @@
 from flask import Flask, render_template, request, flash
 from flask_login import LoginManager
-from werkzeug.security import check_password_hash, generate_password_hash
+from werkzeug.security import generate_password_hash
 from db import candidatos, votantes
-from validaciones import agregar_votante, agregar_candidato
+from validaciones import agregar_votante, agregar_candidato, verificar_usuario
 from pprint import pprint
 # korean queen tokyo walmart 2 DRIP > TOKYO , rope SKYPE _ 4 & korean XBOX
 app = Flask(__name__, template_folder='templates')
@@ -69,6 +69,9 @@ def registrar_usuario():
 
 @app.route('/inicio', methods=['GET', 'POST'])
 def iniciar_sesion():
+    if request.method == 'POST': 
+        forma = request.form
+        
     return render_template('/inicio/index.html')
 
 @app.route('/resultados', methods=['GET'])

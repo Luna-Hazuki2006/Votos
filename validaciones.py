@@ -1,4 +1,5 @@
 from db import votantes, candidatos
+from werkzeug.security import check_password_hash
 
 def agregar_votante(votante): 
     lista = votantes.find({'estatus': 'A'})
@@ -21,3 +22,11 @@ def agregar_candidato(candidato):
     for esto in lista: 
         if esto['cedula'] == candidato['cedula']: return False
     return True
+
+def verificar_usuario(cedula, clave):
+    lista = votantes.find({'estatus': 'A'})
+    for esto in lista: 
+        if (esto['cedula'] == cedula and 
+            check_password_hash(esto['clave'], clave)): 
+            return True
+    return False
