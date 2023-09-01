@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, flash
+from flask import flask
 from db import candidatos, votantes
 from validaciones import agregar_votante, agregar_candidato
 from pprint import pprint
