@@ -9,6 +9,16 @@ from pprint import pprint
 app = Flask(__name__, template_folder='templates')
 app.config['SECRET_KEY'] = 'kqtw2D>T,rS_4&kX'
 
+from itsdangerous import URLSafeSerializer
+auth_s = URLSafeSerializer("secret key", "auth")
+token = auth_s.dumps({"id": 5, "name": "itsdangerous"})
+
+print(token)
+# eyJpZCI6NSwibmFtZSI6Iml0c2Rhbmdlcm91cyJ9.6YP6T0BaO67XP--9UzTrmurXSmg
+
+data = auth_s.loads(token)
+print(data["name"])
+# itsdangerous
 @app.route('/')
 def iniciar():
     with open('datos_importantes', 'w+') as datos:
