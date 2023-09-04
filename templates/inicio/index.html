@@ -1,11 +1,11 @@
 {% extends './index.html' %}
 {% block content %}
-<form>
+<form method="post">
     <h2 id="titulo">Iniciar sesión</h2>
     <label for="cedula">Cédula: </label>
     <input type="text" name="cedula" id="cedula"><br>
     <label for="contraseña">Contraseña: </label>
     <input type="password" name="contraseña" id="contraseña"><br>
-    <button type="button" onclick="iniciar_sesion();">Iniciar sesión</button>
+    <button type="submit" onclick="iniciar_sesion();">Iniciar sesión</button>
 </form>
 {% endblock %}

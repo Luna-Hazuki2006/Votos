@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, flash
 from os import urandom
 from flask_login import LoginManager
-from itsdangerous import TimedSerializer
+from itsdangerous import TimestampSigner
 from werkzeug.security import generate_password_hash
 from db import candidatos, votantes
 from validaciones import agregar_votante, agregar_candidato, verificar_usuario
@@ -10,7 +10,19 @@ from pprint import pprint
 app = Flask(__name__, template_folder='templates')
 # app.config['SECRET_KEY'] = 'kqtw2D>T,rS_4&kX'
 app.config['SECRET_KEY'] = urandom(16).hex()
+token = None
 
+BaseToken = TimestampSigner(app.config['SECRET_KEY'])
+
+def generar_token(usuario):
+    token = BaseToken.dumps({'cedula': f'{usuario}'})
+    print(token)
+    # BaseToken.loads(token, max_age=600)
+    print(token)
+    BaseToken.loads(token, max_age=0)
+    print(token)
+    BaseToken.loads(token)
+    print(token)
 
 @app.route('/')
 def iniciar():
@@ -62,7 +74,11 @@ def registrar_usuario():
 def iniciar_sesion():
     if request.method == 'POST': 
         forma = request.form
-        
+        cedula = forma['cedula']
+        clave = forma['contraseña']
+        if verificar_usuario(cedula, clave): 
+            print('*******************')
+            generar_token(cedula)
     return render_template('/inicio/index.html')
 
 @app.route('/resultados', methods=['GET'])
