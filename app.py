@@ -14,19 +14,6 @@ app.config['SECRET_KEY'] = urandom(16).hex()
 
 @app.route('/')
 def iniciar():
-    with open('datos_importantes', 'w+') as datos:
-        datos.write('Votantes:\n')
-        for esto in votantes.find({'estatus': 'A'}): 
-            datos.write(esto['cedula'])
-            datos.write('\n')
-            datos.write(generate_password_hash(esto['clave']))
-            datos.write('\n')
-        datos.write('Candidatos:\n')
-        for esto in candidatos.find({'estatus': 'A'}): 
-            datos.write(esto['cedula'])
-            datos.write('\n')
-            datos.write(generate_password_hash(esto['clave']))
-            datos.write('\n')
     return render_template('/principio/index.html')
 
 @app.route('/candidatos', methods=['GET'])
