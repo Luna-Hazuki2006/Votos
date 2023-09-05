@@ -1,7 +1,8 @@
 from flask import Flask, render_template, request, flash
 from os import urandom
+from datetime import date, datetime
 from flask_login import LoginManager
-from itsdangerous import TimestampSigner
+from itsdangerous import TimestampSigner, URLSafeTimedSerializer, base64_decode
 from werkzeug.security import generate_password_hash
 from db import candidatos, votantes
 from validaciones import agregar_votante, agregar_candidato, verificar_usuario
@@ -10,19 +11,32 @@ from pprint import pprint
 app = Flask(__name__, template_folder='templates')
 # app.config['SECRET_KEY'] = 'kqtw2D>T,rS_4&kX'
 app.config['SECRET_KEY'] = urandom(16).hex()
-token = None
+BaseToken = URLSafeTimedSerializer(app.config['SECRET_KEY'])
 
-BaseToken = TimestampSigner(app.config['SECRET_KEY'])
+Token_Usuario = {
+    'token': None, 
+    'tiempo': None
+}
 
 def generar_token(usuario):
-    token = BaseToken.dumps({'cedula': f'{usuario}'})
-    print(token)
-    # BaseToken.loads(token, max_age=600)
-    print(token)
-    BaseToken.loads(token, max_age=0)
-    print(token)
-    BaseToken.loads(token)
-    print(token)
+    token = BaseToken.dumps({'cedula': f'{usuario}'}, salt='usuario')
+    BaseToken.loads(token, salt='usuario')
+    print(datetime.utcnow())
+    Token_Usuario['token'] = token
+    # header, body, something_else = token.split(b'.'.decode('utf-8'))
+    actual = datetime.utcnow()
+    luego = None
+    if (actual.minute + 6) > 59: 
+        minuto = (actual.minute + 6) - 59
+        hora = actual.hour + 1
+        Token_Usuario['tiempo'] = datetime(actual.year, actual.month, actual.day, hora, minuto)
+    else: 
+        Token_Usuario['tiempo'] = datetime(actual.year, actual.month, actual.day, actual.hour, actual.minute + 6)
+    print(Token_Usuario)
+
+def verificar():
+    
+    return True
 
 @app.route('/')
 def iniciar():
