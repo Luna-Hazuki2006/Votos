@@ -1,0 +1,22 @@
+{% extends './index.html' %}
+{% block content %}
+<h1>Votación</h1>
+<p>
+    <span style="color: red;">¡Precaución!</span> 
+    Solo puede votar una vez
+</p>
+<table>
+    <tr>
+        <th>Cédula</th>
+        <th>Nombre</th>
+        <th>Apellido</th>
+    </tr>
+    {% for este in lista %}
+    <tr>
+        <td>{{ este['cedula'] }}</td>
+        <td>{{ este['nombre'] }}</td>
+        <td>{{ este['apellido'] }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

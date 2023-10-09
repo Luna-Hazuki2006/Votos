@@ -39,6 +39,7 @@
     {% for mensaje in get_flashed_messages() %}
     <p style="color: red;">{{ mensaje }}</p>
     {% endfor %}
+    <input type="hidden" name="usuario_actual" id="usuario_actual">
     {% block content %}
     {% endblock %}
 </body>
