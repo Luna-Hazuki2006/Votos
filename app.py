@@ -15,30 +15,35 @@ app.config['SECRET_KEY'] = urandom(16).hex()
 BaseToken = URLSafeTimedSerializer(app.config['SECRET_KEY'])
 localStorage = localStoragePy('votos', 'json')
 
-# Token_Usuario = {
-#     'token': None, 
-#     'tiempo': None
-# }
+def generar_token(usuario):
+    # token = BaseToken.dumps({'cedula': f'{usuario}'}, salt='usuario')
+    # BaseToken.loads(token, salt='usuario')
+    # print(datetime.utcnow())
+    # Token_Usuario['token'] = token
+    # header, body, something_else = token.split(b'.'.decode('utf-8'))
+    # actual = datetime.utcnow()
+    # luego = None
+    # if (actual.minute + 6) > 59: 
+    #     minuto = (actual.minute + 6) - 59
+    #     hora = actual.hour + 1
+    #     Token_Usuario['tiempo'] = datetime(actual.year, actual.month, actual.day, hora, minuto)
+    # else: 
+    #     Token_Usuario['tiempo'] = datetime(actual.year, actual.month, actual.day, actual.hour, actual.minute + 6)
+    # print(Token_Usuario)
+    actual = datetime.utcnow()
+    if (actual.minute + 6) > 59: 
+        minuto = (actual.minute + 6) - 59
+        hora = actual.hour + 1
+        tiempo = datetime(actual.year, actual.month, actual.day, hora, minuto)
+        localStorage.setItem('token', {'cedula': f'{usuario}', 'vencimiento': tiempo})
+    else: 
+        tiempo = datetime(actual.year, actual.month, actual.day, actual.hour, (actual.minute + 6))
+        localStorage.setItem('token', {'cedula': f'{usuario}', 'vencimiento': tiempo})
+    flash(localStorage.getItem('token'))
 
-# def generar_token(usuario):
-#     token = BaseToken.dumps({'cedula': f'{usuario}'}, salt='usuario')
-#     BaseToken.loads(token, salt='usuario')
-#     print(datetime.utcnow())
-#     Token_Usuario['token'] = token
-#     # header, body, something_else = token.split(b'.'.decode('utf-8'))
-#     actual = datetime.utcnow()
-#     luego = None
-#     if (actual.minute + 6) > 59: 
-#         minuto = (actual.minute + 6) - 59
-#         hora = actual.hour + 1
-#         Token_Usuario['tiempo'] = datetime(actual.year, actual.month, actual.day, hora, minuto)
-#     else: 
-#         Token_Usuario['tiempo'] = datetime(actual.year, actual.month, actual.day, actual.hour, actual.minute + 6)
-#     print(Token_Usuario)
-
-# def verificar():
+def verificar():
     
-#     return True
+    return True
 
 @app.route('/')
 def iniciar():
@@ -94,7 +99,9 @@ def iniciar_sesion():
         clave = forma['contraseña']
         if verificar_usuario(cedula, clave): 
             print('*******************')
-            # generar_token(cedula)
+            generar_token(cedula)
+            
+        else: flash('Parece que te equivocaste de contraseña')
     return render_template('/inicio/index.html')
 
 @app.route('/resultados', methods=['GET'])
