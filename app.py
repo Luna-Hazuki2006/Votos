@@ -42,20 +42,29 @@ def generar_token(usuario):
     flash(localStorage.getItem('token'))
 
 def verificar():
-    
-    return True
+    token = localStorage.getItem('token')
+    if token['vencimiento'] > datetime.now(): 
+        localStorage.removeItem('token')
 
 @app.route('/')
 def iniciar():
-    return render_template('/principio/index.html')
+    verificar()
+    token = localStorage.getItem('token')
+    return render_template('/principio/index.html', 
+                           token)
 
 @app.route('/candidatos', methods=['GET'])
 def listar_candidatos(): 
+    verificar()
+    token = localStorage.getItem('token')
     lista = candidatos.find({'estatus': 'A'})
-    return render_template('/candidatos/index.html', lista=lista)
+    return render_template('/candidatos/index.html', lista=lista, 
+                           token=token)
 
 @app.route('/registro', methods=['GET', 'POST'])
 def registrar_usuario(): 
+    verificar()
+    token = localStorage.getItem('token')
     if request.method == 'POST':
         forma = request.form
         if forma['contraseña'] == forma['repetida']: 
@@ -89,10 +98,13 @@ def registrar_usuario():
             pprint(forma['tipo'])
         else: 
             flash('Las contraseñas no son iguales')
-    return render_template('/registro/index.html')
+    return render_template('/registro/index.html', 
+                           token=token)
 
 @app.route('/inicio', methods=['GET', 'POST'])
 def iniciar_sesion():
+    verificar()
+    token = localStorage.getItem('token')
     if request.method == 'POST': 
         forma = request.form
         cedula = forma['cedula']
@@ -102,11 +114,15 @@ def iniciar_sesion():
             generar_token(cedula)
             
         else: flash('Parece que te equivocaste de contraseña')
-    return render_template('/inicio/index.html')
+    return render_template('/inicio/index.html', 
+                           token=token)
 
 @app.route('/resultados', methods=['GET'])
 def mostrar_resultados(): 
-    return render_template('/resultados/index.html')
+    verificar()
+    token = localStorage.getItem('token')
+    return render_template('/resultados/index.html', 
+                           token=token)
 
 @app.route('/votantes', methods=['GET'])
 def listar_votantes(): 
