@@ -13,6 +13,7 @@
         <a href="{{ url_for('iniciar') }}">
             <h1>Votación</h1>
         </a>
+        {% if token['token'] is None %}
         <div>
             <a href="{{ url_for('registrar_usuario') }}">
                 <button type="button">Registrar participante</button>
@@ -21,7 +22,17 @@
                 <button type="button">Iniciar sesión</button>
             </a>
         </div>
-        <p id="usuario">Usuario: ninguno</p>
+        {% else %}
+        <div>
+            <a href="{{ url_for('votar') }}">
+                <button type="button">Votar</button>
+            </a>
+            <a href="{{ url_for('cerrar') }}">
+                <button type="button">Cerrar sesión</button>
+            </a>
+        </div>
+        {% endif %}
+        <!-- <p id="usuario">Usuario: ninguno</p> -->
     </header>
     <nav>
         <ul>

@@ -126,8 +126,31 @@ def mostrar_resultados():
 
 @app.route('/votantes', methods=['GET'])
 def listar_votantes(): 
+    verificar()
+    token = localStorage.getItem('token')
     lista = votantes.find({'estatus': 'A'})
-    return render_template('/votantes/index.html', lista=lista)
+    return render_template('/votantes/index.html', lista=lista, 
+                           token=token)
+
+@app.route('/votacion', methods=['POST, GET'])
+def votar(): 
+    verificar()
+    token = localStorage.getItem('token')
+    if token is None: 
+        flash('disculpe, tiene iniciar sesión para votar')
+        return render_template('/inicio/index.html', 
+                               token)
+    if request.method == 'POST': 
+        forma = request.form
+        
+    return render_template('/votaciones/index.html', 
+                           token=token)
+
+def cerrar(): 
+    localStorage.removeItem('token')
+    token = localStorage.getItem('token')
+    return render_template('/principio/index.html', 
+                           token)
 
 if __name__ == '__main__':
     app.run(debug=True)

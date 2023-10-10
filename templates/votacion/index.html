@@ -5,7 +5,7 @@
     <span style="color: red;">¡Precaución!</span> 
     Solo puede votar una vez
 </p>
-<table>
+<!-- <table>
     <tr>
         <th>Cédula</th>
         <th>Nombre</th>
@@ -18,5 +18,16 @@
         <td>{{ este['apellido'] }}</td>
     </tr>
     {% endfor %}
-</table>
+</table> -->
+<form method="post">
+    <fieldset>
+        <legend>Zona de votación</legend>
+        <label for="candidato">Candidato a votar: </label>
+        <select name="candidato" id="candidato">
+            {% for uno in candidatos %}
+            <option value="{{ uno['cedula'] }}">{{ uno['nombre'] }}</option>
+            {% endfor %}
+        </select>
+    </fieldset>
+</form>
 {% endblock %}
