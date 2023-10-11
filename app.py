@@ -8,6 +8,8 @@ from db import candidatos, votantes
 from validaciones import agregar_votante, agregar_candidato, verificar_usuario
 from pprint import pprint
 from localStoragePy import localStoragePy
+import json
+import ast
 # korean queen tokyo walmart 2 DRIP > TOKYO , rope SKYPE _ 4 & korean XBOX
 app = Flask(__name__, template_folder='templates')
 # app.config['SECRET_KEY'] = 'kqtw2D>T,rS_4&kX'
@@ -35,23 +37,41 @@ def generar_token(usuario):
         minuto = (actual.minute + 6) - 59
         hora = actual.hour + 1
         tiempo = datetime(actual.year, actual.month, actual.day, hora, minuto)
-        localStorage.setItem('token', {'cedula': f'{usuario}', 'vencimiento': tiempo})
+        localStorage.setItem("token", {"cedula": f"{usuario}", "vencimiento": tiempo})
     else: 
         tiempo = datetime(actual.year, actual.month, actual.day, actual.hour, (actual.minute + 6))
-        localStorage.setItem('token', {'cedula': f'{usuario}', 'vencimiento': tiempo})
-    flash(localStorage.getItem('token'))
+        localStorage.setItem("token", {"cedula": f"{usuario}", "vencimiento": tiempo})
+    print(localStorage.getItem('token'))
 
 def verificar():
-    token = localStorage.getItem('token')
-    if token['vencimiento'] > datetime.now(): 
-        localStorage.removeItem('token')
+    try: 
+        token = localStorage.getItem("token")
+        if token is None: 
+            return
+        print('vencimiento: ')
+        token = f'{token}'
+        print(token)
+        print(type(token))
+        print(dict(token))
+        # token = json.dumps(token)
+        # print(token)
+        # print(type(token))
+        token = ast.literal_eval(token)
+        print(token)
+        print(token["vencimiento"])
+        print(token["cedula"])
+        if token.vencimiento > datetime.utcnow(): 
+            localStorage.removeItem('token')
+    except Exception as e:
+        print(e) 
+        flash('No has iniciado sesión, asique solo eres un observador')
 
 @app.route('/')
 def iniciar():
     verificar()
     token = localStorage.getItem('token')
     return render_template('/principio/index.html', 
-                           token)
+                           token=token)
 
 @app.route('/candidatos', methods=['GET'])
 def listar_candidatos(): 
@@ -112,7 +132,7 @@ def iniciar_sesion():
         if verificar_usuario(cedula, clave): 
             print('*******************')
             generar_token(cedula)
-            
+            return render_template('/principio/index.html', token=token)
         else: flash('Parece que te equivocaste de contraseña')
     return render_template('/inicio/index.html', 
                            token=token)
@@ -146,11 +166,13 @@ def votar():
     return render_template('/votaciones/index.html', 
                            token=token)
 
+@app.route('/cerrado')
 def cerrar(): 
-    localStorage.removeItem('token')
+    if localStorage.getItem('token') is not None: 
+        localStorage.removeItem('token')
     token = localStorage.getItem('token')
     return render_template('/principio/index.html', 
-                           token)
+                           token=token)
 
 if __name__ == '__main__':
     app.run(debug=True)

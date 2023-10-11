@@ -13,7 +13,7 @@
         <a href="{{ url_for('iniciar') }}">
             <h1>Votación</h1>
         </a>
-        {% if token['token'] is None %}
+        {% if token == None %}
         <div>
             <a href="{{ url_for('registrar_usuario') }}">
                 <button type="button">Registrar participante</button>
