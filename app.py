@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, flash
 from os import urandom
-from datetime import date, datetime
+from datetime import datetime
 from flask_login import LoginManager
 from itsdangerous import TimestampSigner, URLSafeTimedSerializer, base64_decode
 from werkzeug.security import generate_password_hash
@@ -37,10 +37,12 @@ def generar_token(usuario):
         minuto = (actual.minute + 6) - 59
         hora = actual.hour + 1
         tiempo = datetime(actual.year, actual.month, actual.day, hora, minuto)
-        localStorage.setItem("token", {"cedula": f"{usuario}", "vencimiento": tiempo})
+        print(tiempo)
+        localStorage.setItem('token', json.dumps({'cedula': f'{usuario}', 'vencimiento': tiempo.strftime('%d/%m/%Y, %H:%M:%S')}))
     else: 
         tiempo = datetime(actual.year, actual.month, actual.day, actual.hour, (actual.minute + 6))
-        localStorage.setItem("token", {"cedula": f"{usuario}", "vencimiento": tiempo})
+        print(tiempo)
+        localStorage.setItem('token', json.dumps({'cedula': f'{usuario}', 'vencimiento': tiempo.strftime('%d/%m/%Y, %H:%M:%S')}))
     print(localStorage.getItem('token'))
 
 def verificar():
@@ -50,18 +52,20 @@ def verificar():
             return
         print('vencimiento: ')
         token = f'{token}'
-        print(token)
         print(type(token))
-        print(dict(token))
-        # token = json.dumps(token)
-        # print(token)
-        # print(type(token))
-        token = ast.literal_eval(token)
         print(token)
-        print(token["vencimiento"])
+        token = eval(token)
+        print(token)
+        print(token['vencimiento'])
+        print(datetime.strptime(token['vencimiento'], '%d/%m/%Y, %H:%M:%S'))
         print(token["cedula"])
-        if token.vencimiento > datetime.utcnow(): 
+        if datetime.strptime(token['vencimiento'], '%d/%m/%Y, %H:%M:%S') > datetime.utcnow(): 
             localStorage.removeItem('token')
+            print('LO LOGRASTEEEEEEEEEEEEEE')
+            print(token)
+        else: 
+            print('aaaaaaaaaaaaaaaaaaaa')
+            print('holaaaaaaaaaaaaa')
     except Exception as e:
         print(e) 
         flash('No has iniciado sesión, asique solo eres un observador')
