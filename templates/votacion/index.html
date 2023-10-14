@@ -1,0 +1,20 @@
+{% extends './index.html' %}
+{% block content %}
+<h1>Votación</h1>
+<p>
+    <span style="color: red;">¡Precaución!</span> 
+    Solo puede votar una vez
+</p>
+<form method="post">
+    <fieldset>
+        <legend>Zona de votación</legend>
+        <label for="candidato">Candidato a votar: </label>
+        <select name="candidato" id="candidato">
+            {% for uno in candidatos %}
+            <option value="{{ uno['cedula'] }}">{{ uno['nombre'] }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">Votar</button>
+    </fieldset>
+</form>
+{% endblock %}

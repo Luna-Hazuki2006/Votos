@@ -1,54 +1,94 @@
 from flask import Flask, render_template, request, flash
 from os import urandom
-from datetime import date, datetime
+from datetime import datetime
 from flask_login import LoginManager
 from itsdangerous import TimestampSigner, URLSafeTimedSerializer, base64_decode
 from werkzeug.security import generate_password_hash
 from db import candidatos, votantes
 from validaciones import agregar_votante, agregar_candidato, verificar_usuario
 from pprint import pprint
+from localStoragePy import localStoragePy
+import json
+import ast
 # korean queen tokyo walmart 2 DRIP > TOKYO , rope SKYPE _ 4 & korean XBOX
 app = Flask(__name__, template_folder='templates')
 # app.config['SECRET_KEY'] = 'kqtw2D>T,rS_4&kX'
 app.config['SECRET_KEY'] = urandom(16).hex()
 BaseToken = URLSafeTimedSerializer(app.config['SECRET_KEY'])
-
-Token_Usuario = {
-    'token': None, 
-    'tiempo': None
-}
+localStorage = localStoragePy('votos', 'json')
 
 def generar_token(usuario):
-    token = BaseToken.dumps({'cedula': f'{usuario}'}, salt='usuario')
-    BaseToken.loads(token, salt='usuario')
-    print(datetime.utcnow())
-    Token_Usuario['token'] = token
+    # token = BaseToken.dumps({'cedula': f'{usuario}'}, salt='usuario')
+    # BaseToken.loads(token, salt='usuario')
+    # print(datetime.utcnow())
+    # Token_Usuario['token'] = token
     # header, body, something_else = token.split(b'.'.decode('utf-8'))
+    # actual = datetime.utcnow()
+    # luego = None
+    # if (actual.minute + 6) > 59: 
+    #     minuto = (actual.minute + 6) - 59
+    #     hora = actual.hour + 1
+    #     Token_Usuario['tiempo'] = datetime(actual.year, actual.month, actual.day, hora, minuto)
+    # else: 
+    #     Token_Usuario['tiempo'] = datetime(actual.year, actual.month, actual.day, actual.hour, actual.minute + 6)
+    # print(Token_Usuario)
     actual = datetime.utcnow()
-    luego = None
     if (actual.minute + 6) > 59: 
         minuto = (actual.minute + 6) - 59
         hora = actual.hour + 1
-        Token_Usuario['tiempo'] = datetime(actual.year, actual.month, actual.day, hora, minuto)
+        tiempo = datetime(actual.year, actual.month, actual.day, hora, minuto)
+        print(tiempo)
+        localStorage.setItem('token', json.dumps({'cedula': f'{usuario}', 'vencimiento': tiempo.strftime('%d/%m/%Y, %H:%M:%S')}))
     else: 
-        Token_Usuario['tiempo'] = datetime(actual.year, actual.month, actual.day, actual.hour, actual.minute + 6)
-    print(Token_Usuario)
+        tiempo = datetime(actual.year, actual.month, actual.day, actual.hour, (actual.minute + 6))
+        print(tiempo)
+        localStorage.setItem('token', json.dumps({'cedula': f'{usuario}', 'vencimiento': tiempo.strftime('%d/%m/%Y, %H:%M:%S')}))
+    print(localStorage.getItem('token'))
 
 def verificar():
-    
-    return True
+    try: 
+        token = localStorage.getItem("token")
+        if token is None: 
+            return
+        print('vencimiento: ')
+        token = f'{token}'
+        print(type(token))
+        print(token)
+        token = eval(token)
+        print(token)
+        print(token['vencimiento'])
+        print(datetime.strptime(token['vencimiento'], '%d/%m/%Y, %H:%M:%S'))
+        print(token["cedula"])
+        if datetime.strptime(token['vencimiento'], '%d/%m/%Y, %H:%M:%S') > datetime.utcnow(): 
+            localStorage.removeItem('token')
+            print('LO LOGRASTEEEEEEEEEEEEEE')
+            print(token)
+        else: 
+            print('aaaaaaaaaaaaaaaaaaaa')
+            print('holaaaaaaaaaaaaa')
+    except Exception as e:
+        print(e) 
+        flash('No has iniciado sesión, asique solo eres un observador')
 
 @app.route('/')
 def iniciar():
-    return render_template('/principio/index.html')
+    verificar()
+    token = localStorage.getItem('token')
+    return render_template('/principio/index.html', 
+                           token=token)
 
 @app.route('/candidatos', methods=['GET'])
 def listar_candidatos(): 
+    verificar()
+    token = localStorage.getItem('token')
     lista = candidatos.find({'estatus': 'A'})
-    return render_template('/candidatos/index.html', lista=lista)
+    return render_template('/candidatos/index.html', lista=lista, 
+                           token=token)
 
 @app.route('/registro', methods=['GET', 'POST'])
 def registrar_usuario(): 
+    verificar()
+    token = localStorage.getItem('token')
     if request.method == 'POST':
         forma = request.form
         if forma['contraseña'] == forma['repetida']: 
@@ -82,10 +122,13 @@ def registrar_usuario():
             pprint(forma['tipo'])
         else: 
             flash('Las contraseñas no son iguales')
-    return render_template('/registro/index.html')
+    return render_template('/registro/index.html', 
+                           token=token)
 
 @app.route('/inicio', methods=['GET', 'POST'])
 def iniciar_sesion():
+    verificar()
+    token = localStorage.getItem('token')
     if request.method == 'POST': 
         forma = request.form
         cedula = forma['cedula']
@@ -93,16 +136,47 @@ def iniciar_sesion():
         if verificar_usuario(cedula, clave): 
             print('*******************')
             generar_token(cedula)
-    return render_template('/inicio/index.html')
+            return render_template('/principio/index.html', token=token)
+        else: flash('Parece que te equivocaste de contraseña')
+    return render_template('/inicio/index.html', 
+                           token=token)
 
 @app.route('/resultados', methods=['GET'])
 def mostrar_resultados(): 
-    return render_template('/resultados/index.html')
+    verificar()
+    token = localStorage.getItem('token')
+    return render_template('/resultados/index.html', 
+                           token=token)
 
 @app.route('/votantes', methods=['GET'])
 def listar_votantes(): 
+    verificar()
+    token = localStorage.getItem('token')
     lista = votantes.find({'estatus': 'A'})
-    return render_template('/votantes/index.html', lista=lista)
+    return render_template('/votantes/index.html', lista=lista, 
+                           token=token)
+
+@app.route('/votacion', methods=['POST, GET'])
+def votar(): 
+    verificar()
+    token = localStorage.getItem('token')
+    if token is None: 
+        flash('disculpe, tiene iniciar sesión para votar')
+        return render_template('/inicio/index.html', 
+                               token)
+    if request.method == 'POST': 
+        forma = request.form
+        
+    return render_template('/votaciones/index.html', 
+                           token=token)
+
+@app.route('/cerrado')
+def cerrar(): 
+    if localStorage.getItem('token') is not None: 
+        localStorage.removeItem('token')
+    token = localStorage.getItem('token')
+    return render_template('/principio/index.html', 
+                           token=token)
 
 if __name__ == '__main__':
     app.run(debug=True)
