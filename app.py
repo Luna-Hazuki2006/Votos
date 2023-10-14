@@ -18,20 +18,6 @@ BaseToken = URLSafeTimedSerializer(app.config['SECRET_KEY'])
 localStorage = localStoragePy('votos', 'json')
 
 def generar_token(usuario):
-    # token = BaseToken.dumps({'cedula': f'{usuario}'}, salt='usuario')
-    # BaseToken.loads(token, salt='usuario')
-    # print(datetime.utcnow())
-    # Token_Usuario['token'] = token
-    # header, body, something_else = token.split(b'.'.decode('utf-8'))
-    # actual = datetime.utcnow()
-    # luego = None
-    # if (actual.minute + 6) > 59: 
-    #     minuto = (actual.minute + 6) - 59
-    #     hora = actual.hour + 1
-    #     Token_Usuario['tiempo'] = datetime(actual.year, actual.month, actual.day, hora, minuto)
-    # else: 
-    #     Token_Usuario['tiempo'] = datetime(actual.year, actual.month, actual.day, actual.hour, actual.minute + 6)
-    # print(Token_Usuario)
     actual = datetime.utcnow()
     if (actual.minute + 6) > 59: 
         minuto = (actual.minute + 6) - 59
