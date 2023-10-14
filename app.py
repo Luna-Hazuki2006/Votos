@@ -15,7 +15,7 @@ app = Flask(__name__, template_folder='templates')
 # app.config['SECRET_KEY'] = 'kqtw2D>T,rS_4&kX'
 app.config['SECRET_KEY'] = urandom(16).hex()
 BaseToken = URLSafeTimedSerializer(app.config['SECRET_KEY'])
-localStorage = localStoragePy('votos', 'json')
+localStorage = localStoragePy('votaciones', 'json')
 
 def generar_token(usuario):
     # token = BaseToken.dumps({'cedula': f'{usuario}'}, salt='usuario')
