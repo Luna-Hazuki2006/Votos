@@ -152,7 +152,9 @@ def votar():
                                token)
     if request.method == 'POST': 
         forma = request.form
-        
+        candidato = forma['candidato']
+        token = eval(token)
+        usuario = token['cedula']
     return render_template('/votaciones/index.html', 
                            token=token)
 
