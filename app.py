@@ -9,7 +9,6 @@ from validaciones import agregar_votante, agregar_candidato, verificar_usuario
 from pprint import pprint
 from localStoragePy import localStoragePy
 import json
-import ast
 # korean queen tokyo walmart 2 DRIP > TOKYO , rope SKYPE _ 4 & korean XBOX
 app = Flask(__name__, template_folder='templates')
 # app.config['SECRET_KEY'] = 'kqtw2D>T,rS_4&kX'
@@ -48,10 +47,11 @@ def verificar():
         if datetime.strptime(token['vencimiento'], '%d/%m/%Y, %H:%M:%S') > datetime.utcnow(): 
             localStorage.removeItem('token')
             print('LO LOGRASTEEEEEEEEEEEEEE')
+            flash('lo lograsteeeeee')
             print(token)
         else: 
-            print('aaaaaaaaaaaaaaaaaaaa')
-            print('holaaaaaaaaaaaaa')
+            flash('Estas en en modo espectador')
+            print('no has iniciado sesión')
     except Exception as e:
         print(e) 
         flash('No has iniciado sesión, asique solo eres un observador')
@@ -152,17 +152,19 @@ def votar():
                                token)
     if request.method == 'POST': 
         forma = request.form
-        candidato = forma['candidato']
-        token = eval(token)
-        usuario = token['cedula']
-    return render_template('/votaciones/index.html', 
+        # candidato = forma['candidato']
+        # token = eval(token)
+        # usuario = token['cedula']
+    return render_template('/votacion/index.html', 
                            token=token)
 
 @app.route('/cerrado')
 def cerrar(): 
-    if localStorage.getItem('token') is not None: 
-        localStorage.removeItem('token')
+    # if localStorage.getItem('token') is not None: 
+    #     localStorage.removeItem('token')
+    localStorage.setItem('token', None)
     token = localStorage.getItem('token')
+    flash(token)
     return render_template('/principio/index.html', 
                            token=token)
 
