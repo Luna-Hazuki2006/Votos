@@ -152,6 +152,7 @@ def listar_votantes():
 def votar(): 
     verificar()
     token = localStorage.getItem('token')
+    lista = candidatos.find({'estatus': 'A'})
     print(token)
     if token == None: 
         flash('disculpe, tiene iniciar sesión para votar')
@@ -163,7 +164,7 @@ def votar():
         # token = eval(token)
         # usuario = token['cedula']
     return render_template('/votacion/index.html', 
-                           token=token)
+                           token=token, lista=lista)
 
 @app.route('/cerrado')
 def cerrar(): 

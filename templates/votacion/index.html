@@ -10,7 +10,7 @@
         <legend>Zona de votación</legend>
         <label for="candidato">Candidato a votar: </label>
         <select name="candidato" id="candidato">
-            {% for uno in candidatos %}
+            {% for uno in lista %}
             <option value="{{ uno['cedula'] }}">{{ uno['nombre'] }}</option>
             {% endfor %}
         </select>
