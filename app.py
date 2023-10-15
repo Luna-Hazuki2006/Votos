@@ -14,18 +14,19 @@ app = Flask(__name__, template_folder='templates')
 # app.config['SECRET_KEY'] = 'kqtw2D>T,rS_4&kX'
 app.config['SECRET_KEY'] = urandom(16).hex()
 BaseToken = URLSafeTimedSerializer(app.config['SECRET_KEY'])
-localStorage = localStoragePy('votaciones', 'json')
+localStorage = localStoragePy('votos', 'json')
 
 def generar_token(usuario):
     actual = datetime.utcnow()
-    if (actual.minute + 6) > 59: 
-        minuto = (actual.minute + 6) - 59
+    adicion = 6
+    if (actual.minute + adicion) > 59: 
+        minuto = (actual.minute + adicion) - 59
         hora = actual.hour + 1
         tiempo = datetime(actual.year, actual.month, actual.day, hora, minuto)
         print(tiempo)
         localStorage.setItem('token', json.dumps({'cedula': f'{usuario}', 'vencimiento': tiempo.strftime('%d/%m/%Y, %H:%M:%S')}))
     else: 
-        tiempo = datetime(actual.year, actual.month, actual.day, actual.hour, (actual.minute + 6))
+        tiempo = datetime(actual.year, actual.month, actual.day, actual.hour, (actual.minute + adicion))
         print(tiempo)
         localStorage.setItem('token', json.dumps({'cedula': f'{usuario}', 'vencimiento': tiempo.strftime('%d/%m/%Y, %H:%M:%S')}))
     print(localStorage.getItem('token'))
@@ -37,21 +38,25 @@ def verificar():
             return
         print('vencimiento: ')
         token = f'{token}'
-        print(type(token))
-        print(token)
         token = eval(token)
         print(token)
         print(token['vencimiento'])
-        print(datetime.strptime(token['vencimiento'], '%d/%m/%Y, %H:%M:%S'))
+        vencimiento = datetime.strptime(token['vencimiento'], '%d/%m/%Y, %H:%M:%S')
         print(token["cedula"])
-        if datetime.strptime(token['vencimiento'], '%d/%m/%Y, %H:%M:%S') > datetime.utcnow(): 
-            localStorage.removeItem('token')
+        if datetime.utcnow() > vencimiento: 
+            flash(f'''
+Tu sesión se venció, ya que son las {datetime.utcnow()}, 
+y tu fecha de vencimiento era a las {vencimiento}
+''')
+            localStorage.setItem('token', None)
             print('LO LOGRASTEEEEEEEEEEEEEE')
             flash('lo lograsteeeeee')
             print(token)
         else: 
-            flash('Estas en en modo espectador')
-            print('no has iniciado sesión')
+            flash(f'''
+Lograste iniciar sesión sin ningún problema
+Tu sesión se terminará a las {vencimiento}
+''')
     except Exception as e:
         print(e) 
         flash('No has iniciado sesión, asique solo eres un observador')
@@ -67,6 +72,7 @@ def iniciar():
 def listar_candidatos(): 
     verificar()
     token = localStorage.getItem('token')
+    print(token)
     lista = candidatos.find({'estatus': 'A'})
     return render_template('/candidatos/index.html', lista=lista, 
                            token=token)
@@ -142,14 +148,15 @@ def listar_votantes():
     return render_template('/votantes/index.html', lista=lista, 
                            token=token)
 
-@app.route('/votacion', methods=['POST, GET'])
+@app.route('/votar', methods=['GET', 'POST'])
 def votar(): 
     verificar()
     token = localStorage.getItem('token')
-    if token is None: 
+    print(token)
+    if token == None: 
         flash('disculpe, tiene iniciar sesión para votar')
         return render_template('/inicio/index.html', 
-                               token)
+                               token=token)
     if request.method == 'POST': 
         forma = request.form
         # candidato = forma['candidato']
