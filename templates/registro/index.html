@@ -15,11 +15,23 @@
     <label for="correo">Correo electrónico: </label>
     <input type="email" name="correo" id="correo" required><br>
     <label for="tipo">Tipo de usuario: </label>
-    <select name="tipo" id="tipo">
+    <select onchange="imaginar();" name="tipo" id="tipo">
         {% for esto in ['votante', 'candidato'] %}
         <option value="{{ esto }}">{{ esto }}</option>
         {% endfor %}
     </select><br>
+    <div id="visuales" style="display: none;">
+        <label for="imagen">Imagen de candidato: </label>
+        <input 
+            type="file" 
+            name="imagen" 
+            id="imagen" 
+            accept="image/png, image/jpeg" 
+            oninput="mostrar_imagen()"><br>
+        <img id="vistas" src="" alt="No hay imagen"><br>
+        <button onclick="deimaginar()" type="button">Quitar imagen</button><br>
+        <input type="hidden" name="textual" id="textual">
+    </div>
     <button type="submit" onclick="registrar_usuario();">Mandar correo</button>
 </form>
 {% endblock %}

@@ -6,3 +6,5 @@ db = cliente.votaciones
 
 votantes = db.votantes
 candidatos = db.candidatos
+votos = db.votos
+administrador = db.administrador

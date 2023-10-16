@@ -4,7 +4,7 @@ from datetime import datetime
 from flask_login import LoginManager
 from itsdangerous import TimestampSigner, URLSafeTimedSerializer, base64_decode
 from werkzeug.security import generate_password_hash
-from db import candidatos, votantes
+from db import candidatos, votantes, votos, administrador
 from validaciones import agregar_votante, agregar_candidato, verificar_usuario
 from pprint import pprint
 from localStoragePy import localStoragePy
@@ -65,6 +65,7 @@ Tu sesión se terminará a las {vencimiento}
 def iniciar():
     verificar()
     token = localStorage.getItem('token')
+
     return render_template('/principio/index.html', 
                            token=token)
 
@@ -90,6 +91,7 @@ def registrar_usuario():
                 'apellido': forma['apellido'], 
                 'clave': generate_password_hash(forma['contraseña']), 
                 'correo': forma['correo'], 
+                'voto': False, 
                 'estatus': 'A'
             }
             if forma['tipo'] == 'votante': 
@@ -129,7 +131,11 @@ def iniciar_sesion():
             print('*******************')
             generar_token(cedula)
             return render_template('/principio/index.html', token=token)
-        else: flash('Parece que te equivocaste de contraseña')
+        else:
+            admin = administrador.find_one({'nombre': 'administrador'})
+            if cedula == 'administrador': 
+                pass 
+            flash('Parece que te equivocaste de contraseña')
     return render_template('/inicio/index.html', 
                            token=token)
 
@@ -160,9 +166,28 @@ def votar():
                                token=token)
     if request.method == 'POST': 
         forma = request.form
-        # candidato = forma['candidato']
-        # token = eval(token)
-        # usuario = token['cedula']
+        candidato = forma['candidato']
+        momento = datetime.utcnow()
+        token = eval(token)
+        cedula = token['cedula']
+        votante = votantes.find_one({'cedula': cedula})
+        if not votante['voto']:
+            voto = {
+                'candidato': candidato, 
+                'momento': momento
+            }
+            id = votos.insert_one(voto).inserted_id
+            if id:
+                flash('Ha votado exitósamente')
+                busqueda = {'cedula': cedula, 'estatus': 'A'}
+                final = {'$set': {'voto': True}}
+                votantes.update_one(busqueda, final)
+                render_template('/principio/index.html', 
+                                token=token)
+            else: 
+                flash('Hubo un problema al votar')
+        else: 
+            flash('Usted ya ha votado')
     return render_template('/votacion/index.html', 
                            token=token, lista=lista)
 

@@ -52,3 +52,38 @@ function registrar_usuario() {
     // link.click();
     // document.body.removeChild(link);
 }
+
+function imaginar() {
+    let esto = document.getElementById("tipo");
+    let div = document.getElementById('visuales')
+    let valor = esto.value;
+    // let texto = esto.options[esto.selectedIndex].text;
+    if (valor == 'candidato') {
+        div.style.display = 'block'
+    } else {
+        div.style.display = 'none'
+    }
+}
+
+function mostrar_imagen() {
+    let input = document.getElementById("imagen");
+    let fReader = new FileReader();
+    fReader.readAsDataURL(input.files[0]);
+    fReader.onloadend = function(event) {
+        let img = document.getElementById("textual");
+        img.value = event.target.result;
+        img = document.getElementById('vistas')
+        img.src = event.target.result
+        console.log(event.target.result);
+        return event.target.result
+    }
+}
+
+function deimaginar() {
+    let imagen = document.getElementById('imagen')
+    let externa = document.getElementById('vistas')
+    let vistas = document.getElementById('textual')
+    imagen.value = ''
+    externa.src = ''
+    vistas.value = ''
+}
