@@ -5,7 +5,7 @@ from flask_login import LoginManager
 from itsdangerous import TimestampSigner, URLSafeTimedSerializer, base64_decode
 from werkzeug.security import generate_password_hash
 from db import candidatos, votantes, votos, administrador
-from validaciones import agregar_votante, agregar_candidato, verificar_usuario
+from validaciones import agregar_votante, agregar_candidato, verificar_usuario, verificar_administrador
 from pprint import pprint
 from localStoragePy import localStoragePy
 import json
@@ -65,11 +65,6 @@ Tu sesión se terminará a las {vencimiento}
 def iniciar():
     verificar()
     token = localStorage.getItem('token')
-    # admin = administrador.find_one({'nombre': 'Administrador'})
-    # clave = generate_password_hash('123abc')
-    # busqueda = {'nombre': 'Administrador'}
-    # final = {'$set': {'clave': clave}}
-    # administrador.update_one(busqueda, final)
     return render_template('/principio/index.html', 
                            token=token)
 
@@ -134,11 +129,14 @@ def iniciar_sesion():
         if verificar_usuario(cedula, clave): 
             print('*******************')
             generar_token(cedula)
+            token = localStorage.getItem('token')
+            return render_template('/principio/index.html', token=token)
+        elif verificar_administrador(cedula, clave): 
+            print('//////////////////////////////')
+            generar_token(cedula)
+            token = localStorage.getItem('token')
             return render_template('/principio/index.html', token=token)
         else:
-            admin = administrador.find_one({'nombre': 'administrador'})
-            if cedula == 'administrador': 
-                pass 
             flash('Parece que te equivocaste de contraseña')
     return render_template('/inicio/index.html', 
                            token=token)

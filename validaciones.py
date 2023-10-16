@@ -1,4 +1,4 @@
-from db import votantes, candidatos
+from db import votantes, candidatos, administrador
 from werkzeug.security import check_password_hash
 
 def agregar_votante(votante): 
@@ -30,3 +30,10 @@ def verificar_usuario(cedula, clave):
             check_password_hash(esto['clave'], clave)): 
             return True
     return False
+
+def verificar_administrador(nombre, clave): 
+    admin = administrador.find_one({'nombre': 'Administrador'})
+    if (nombre != 'Administrador' or 
+        check_password_hash(clave, admin['clave'])): 
+        return False
+    return True
