@@ -14,7 +14,7 @@ app = Flask(__name__, template_folder='templates')
 # app.config['SECRET_KEY'] = 'kqtw2D>T,rS_4&kX'
 app.config['SECRET_KEY'] = urandom(16).hex()
 BaseToken = URLSafeTimedSerializer(app.config['SECRET_KEY'])
-localStorage = localStoragePy('votos', 'json')
+localStorage = localStoragePy('votas', 'json')
 
 def generar_token(usuario):
     actual = datetime.utcnow()
@@ -65,7 +65,11 @@ Tu sesión se terminará a las {vencimiento}
 def iniciar():
     verificar()
     token = localStorage.getItem('token')
-
+    # admin = administrador.find_one({'nombre': 'Administrador'})
+    # clave = generate_password_hash('123abc')
+    # busqueda = {'nombre': 'Administrador'}
+    # final = {'$set': {'clave': clave}}
+    # administrador.update_one(busqueda, final)
     return render_template('/principio/index.html', 
                            token=token)
 
