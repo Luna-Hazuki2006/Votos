@@ -22,6 +22,15 @@
                 <button type="button">Iniciar sesión</button>
             </a>
         </div>
+        {% elif token['cedula'] == 'Administrador' %}
+        <div>
+            <a href="{{ url_for('registrar_candidato') }}">
+                <button type="button">Registrar candidatos</button>
+            </a>
+            <a href="{{ url_for('cerrar') }}">
+                <button type="button">Cerrar sesión</button>
+            </a>
+        </div>
         {% else %}
         <div>
             <a href="{{ url_for('votar') }}">

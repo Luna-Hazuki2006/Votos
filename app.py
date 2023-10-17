@@ -5,7 +5,7 @@ from flask_login import LoginManager
 from itsdangerous import TimestampSigner, URLSafeTimedSerializer, base64_decode
 from werkzeug.security import generate_password_hash
 from db import candidatos, votantes, votos, administrador
-from validaciones import agregar_votante, agregar_candidato, verificar_usuario
+from validaciones import agregar_votante, agregar_candidato, verificar_usuario, verificar_administrador
 from pprint import pprint
 from localStoragePy import localStoragePy
 import json
@@ -14,7 +14,7 @@ app = Flask(__name__, template_folder='templates')
 # app.config['SECRET_KEY'] = 'kqtw2D>T,rS_4&kX'
 app.config['SECRET_KEY'] = urandom(16).hex()
 BaseToken = URLSafeTimedSerializer(app.config['SECRET_KEY'])
-localStorage = localStoragePy('votos', 'json')
+localStorage = localStoragePy('votas', 'json')
 
 def generar_token(usuario):
     actual = datetime.utcnow()
@@ -65,9 +65,8 @@ Tu sesión se terminará a las {vencimiento}
 def iniciar():
     verificar()
     token = localStorage.getItem('token')
-
     return render_template('/principio/index.html', 
-                           token=token)
+                           token=eval(token))
 
 @app.route('/candidatos', methods=['GET'])
 def listar_candidatos(): 
@@ -76,7 +75,7 @@ def listar_candidatos():
     print(token)
     lista = candidatos.find({'estatus': 'A'})
     return render_template('/candidatos/index.html', lista=lista, 
-                           token=token)
+                           token=eval(token))
 
 @app.route('/registro', methods=['GET', 'POST'])
 def registrar_usuario(): 
@@ -117,7 +116,13 @@ def registrar_usuario():
         else: 
             flash('Las contraseñas no son iguales')
     return render_template('/registro/index.html', 
-                           token=token)
+                           token=eval(token))
+
+@app.route('/registrar_candidato', methods=['GET', 'POST'])
+def registrar_candidato():
+    token = localStorage.getItem('token')
+    return render_template('/registro/candidato/index.html', 
+                           token=eval(token))
 
 @app.route('/inicio', methods=['GET', 'POST'])
 def iniciar_sesion():
@@ -130,21 +135,24 @@ def iniciar_sesion():
         if verificar_usuario(cedula, clave): 
             print('*******************')
             generar_token(cedula)
-            return render_template('/principio/index.html', token=token)
+            token = localStorage.getItem('token')
+            return render_template('/principio/index.html', token=eval(token))
+        elif verificar_administrador(cedula, clave): 
+            print('//////////////////////////////')
+            generar_token(cedula)
+            token = localStorage.getItem('token')
+            return render_template('/principio/index.html', token=eval(token))
         else:
-            admin = administrador.find_one({'nombre': 'administrador'})
-            if cedula == 'administrador': 
-                pass 
             flash('Parece que te equivocaste de contraseña')
     return render_template('/inicio/index.html', 
-                           token=token)
+                           token=eval(token))
 
 @app.route('/resultados', methods=['GET'])
 def mostrar_resultados(): 
     verificar()
     token = localStorage.getItem('token')
     return render_template('/resultados/index.html', 
-                           token=token)
+                           token=eval(token))
 
 @app.route('/votantes', methods=['GET'])
 def listar_votantes(): 
@@ -152,7 +160,7 @@ def listar_votantes():
     token = localStorage.getItem('token')
     lista = votantes.find({'estatus': 'A'})
     return render_template('/votantes/index.html', lista=lista, 
-                           token=token)
+                           token=eval(token))
 
 @app.route('/votar', methods=['GET', 'POST'])
 def votar(): 
@@ -183,13 +191,13 @@ def votar():
                 final = {'$set': {'voto': True}}
                 votantes.update_one(busqueda, final)
                 render_template('/principio/index.html', 
-                                token=token)
+                                token=eval(token))
             else: 
                 flash('Hubo un problema al votar')
         else: 
             flash('Usted ya ha votado')
     return render_template('/votacion/index.html', 
-                           token=token, lista=lista)
+                           token=eval(token), lista=lista)
 
 @app.route('/cerrado')
 def cerrar(): 
@@ -199,7 +207,7 @@ def cerrar():
     token = localStorage.getItem('token')
     flash(token)
     return render_template('/principio/index.html', 
-                           token=token)
+                           token=eval(token))
 
 if __name__ == '__main__':
     app.run(debug=True)
