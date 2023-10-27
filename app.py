@@ -1,7 +1,6 @@
 from flask import Flask, render_template, request, flash
 from os import urandom
 from datetime import datetime
-from flask_login import LoginManager
 from itsdangerous import TimestampSigner, URLSafeTimedSerializer, base64_decode
 from werkzeug.security import generate_password_hash
 from db import candidatos, votantes, votos, administrador
@@ -65,6 +64,10 @@ Tu sesión se terminará a las {vencimiento}
 def iniciar():
     verificar()
     token = localStorage.getItem('token')
+    token = eval(token)
+    if token is None: 
+        print('nada')
+    print(token)
     return render_template('/principio/index.html', 
                            token=eval(token))
 
