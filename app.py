@@ -63,8 +63,8 @@ Tu sesión se terminará a las {vencimiento}
 @app.route('/')
 def iniciar():
     verificar()
+    localStorage.setItem('token', 'None')
     token = localStorage.getItem('token')
-    token = eval(token)
     if token is None: 
         print('nada')
     print(token)
