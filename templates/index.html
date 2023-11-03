@@ -13,7 +13,7 @@
         <a href="{{ url_for('iniciar') }}">
             <h1>Votación</h1>
         </a>
-        {% if token == 'None' %}
+        <!-- {% if token == 'None' %} -->
         <div>
             <a href="{{ url_for('registrar_usuario') }}">
                 <button type="button">Registrar participante</button>
@@ -22,7 +22,7 @@
                 <button type="button">Iniciar sesión</button>
             </a>
         </div>
-        {% elif token['cedula'] == 'Administrador' %}
+        <!-- {% elif token['cedula'] == 'Administrador' %} -->
         <div>
             <a href="{{ url_for('registrar_candidato') }}">
                 <button type="button">Registrar candidatos</button>
@@ -31,7 +31,7 @@
                 <button type="button">Cerrar sesión</button>
             </a>
         </div>
-        {% else %}
+        <!-- {% else %} -->
         <div>
             <a href="{{ url_for('votar') }}">
                 <button type="button">Votar</button>
@@ -40,7 +40,7 @@
                 <button type="button">Cerrar sesión</button>
             </a>
         </div>
-        {% endif %}
+        <!-- {% endif %} -->
     </header>
     <nav>
         <ul>
@@ -55,11 +55,11 @@
             </li>
         </ul>
     </nav>
-    {% for mensaje in get_flashed_messages() %}
+    <!-- {% for mensaje in get_flashed_messages() %} -->
     <p style="color: red;">{{ mensaje }}</p>
-    {% endfor %}
+    <!-- {% endfor %} -->
     <input type="hidden" name="usuario_actual" id="usuario_actual">
-    {% block content %}
-    {% endblock %}
+    <!-- {% block content %} -->
+    <!-- {% endblock %} -->
 </body>
 </html>
