@@ -1,5 +1,5 @@
-{% extends './index.html' %}
-{% block content %}
+<!-- {% extends './index.html' %} -->
+<!-- {% block content %} -->
 <form method="post">
     <h2 id="titulo">Registro de usuario</h2>
     <label for="cedula">Cédula: </label>
@@ -16,9 +16,9 @@
     <input type="email" name="correo" id="correo" required><br>
     <label for="tipo">Tipo de usuario: </label>
     <select onchange="imaginar();" name="tipo" id="tipo">
-        {% for esto in ['votante', 'candidato'] %}
+        <!-- {% for esto in ['votante', 'candidato'] %} -->
         <option value="{{ esto }}">{{ esto }}</option>
-        {% endfor %}
+        <!-- {% endfor %} -->
     </select><br>
     <div id="visuales" style="display: none;">
         <label for="imagen">Imagen de candidato: </label>
@@ -34,4 +34,4 @@
     </div>
     <button type="submit" onclick="registrar_usuario();">Mandar correo</button>
 </form>
-{% endblock %}
+<!-- {% endblock %} -->
