@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/dark.min.css">
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <script src="{{ url_for('static', filename='index.js') }}" defer></script>
+    <link rel="stylesheet" href="http://localhost:5000/style.css">
+    <script src="http://localhost:5000/index.js" defer></script>
     <title>Votación</title>
 </head>
 <body>
@@ -55,11 +55,13 @@
             </li>
         </ul>
     </nav>
-    <!-- {% for mensaje in get_flashed_messages() %} -->
-    <p style="color: red;">{{ mensaje }}</p>
-    <!-- {% endfor %} -->
+    <h2>Bienvenido a la página de votaciones</h2>
+    <p>
+        Esta página está dedicada para que usuarios puedan 
+        votar por ciertos candidatos. <br>
+        Está hecha para que sea amigable a los usuarios y 
+        sea fácil de comprender y usar.
+    </p>
     <input type="hidden" name="usuario_actual" id="usuario_actual">
-    <!-- {% block content %} -->
-    <!-- {% endblock %} -->
 </body>
 </html>
