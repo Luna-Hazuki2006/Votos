@@ -1,0 +1,15 @@
+{% extends './index.html' %}
+{% block content %}
+<table>
+    <tr>
+        <th>Cédula</th>
+        <th>Nombre completo</th>
+    </tr>
+    {% for esto in lista %}
+    <tr>
+        <td>{{ esto['cedula'] }}</td>
+        <td>{{ esto['nombre'] }} {{ esto['apellido'] }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends './index.html' %}
+{% block content %}
+<form method="post">
+    <h2 id="titulo">Registro de usuario</h2>
+    <label for="cedula">Cédula: </label>
+    <input type="text" name="cedula" id="cedula" required><br>
+    <label for="nombre">Nombres: </label>
+    <input type="text" name="nombre" id="nombre" required><br>
+    <label for="apellido">Apellidos: </label>
+    <input type="text" name="apellido" id="apellido" required><br>
+    <label for="contraseña">Contraseña: </label>
+    <input type="password" name="contraseña" id="contraseña" required><br>
+    <label for="repetida">Contraseña (de nuevo): </label>
+    <input type="password" name="repetida" id="repetida" required><br>
+    <label for="correo">Correo electrónico: </label>
+    <input type="email" name="correo" id="correo" required><br>
+    <label for="tipo">Tipo de usuario: </label>
+    <select name="tipo" id="tipo">
+        {% for esto in ['votante', 'candidato'] %}
+        <option value="{{ esto }}">{{ esto }}</option>
+        {% endfor %}
+    </select><br>
+    <button type="submit" onclick="registrar_usuario();">Mandar correo</button>
+</form>
+{% endblock %}
